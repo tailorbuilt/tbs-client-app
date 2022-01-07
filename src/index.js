@@ -54,7 +54,7 @@ app.on('ready', ()=>{
         })
 	let http = process.argv[2] ?? 'http'
         console.log("loading page " + http + "://"+clientSettings.host+"/client/"+'name:'+clientSettings.name+"/"+mac)
-        win.loadURL(http + "://" + clientSettings.host)
+        win.loadURL(http + "://" + clientSettings.host+"/client/"+'name:'+clientSettings.name+"/"+mac)
 
         if (fs.existsSync(myPath + '/winsize.json')){
             fileWindowSizeString = fs.readFileSync(myPath + "/winsize.json").toString();
@@ -131,10 +131,11 @@ ipcMain.on("save", (event,host,name)=>{
 
     const userSettingsString = JSON.stringify(userSettings)
     console.log(userSettingsString)
+    console.log(mac)
 
     fs.writeFileSync(myPath + "/settings.json", userSettingsString)
     if(win){
-        win.loadURL("http://" + host)
+        win.loadURL("http://" + host+"/client/"+'name:'+name+"/"+mac)
     } else {
         win = new BrowserWindow({
           webPreferences: {
