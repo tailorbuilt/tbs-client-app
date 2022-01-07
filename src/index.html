@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Settings</title>
+
+    <!-- Stylesheets -->
+      <link rel="stylesheet" href="./css/app.css">
+      <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<!--      <script src="https://cdn.tailwindcss.com"></script>-->
+
+      <script>
+          const getmac = require('getmac')
+          //alert(getmac.default())
+          const macAddress = getmac.default()
+          let ipAddress = '';
+          require('dns').lookup(require('os').hostname(), function (err, add, fam) {
+              console.log('settings screen ip: ' + add)
+                 ipAddress = 'IP Address: ' + add.toString()
+              document.getElementById('ipAddressdata').innerHTML = ipAddress;
+          })
+          console.log('variable: ' + ipAddress)
+          const computerName = require('os').hostname()
+          console.log(computerName)
+
+      </script>
+  </head>
+
+  <body>
+
+  <!-- This example requires Tailwind CSS v2.0+ -->
+  <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+      <div class="px-4 py-5 sm:px-6">
+          <img src="./resources/tb.png" alt="TailorBuilt Solutions, LLC" class="w-full">
+          <!-- Content goes here -->
+          <!-- We use less vertical padding on card headers on desktop than on body sections -->
+      </div>
+      <div class="px-4 py-5 sm:p-6">
+
+          <div class="isolate -space-y-px rounded-md shadow-sm">
+              <div class="relative border border-gray-300 rounded-md rounded-b-none px-3 py-2 focus-within:z-10 focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
+                  <label for="host" class="block text-xs font-medium text-gray-700">Host</label>
+                  <input type="text" name="host" id="host" class="block border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm" placeholder="site.tailorbuilt.app">
+              </div>
+              <div class="relative border border-gray-300 rounded-md rounded-t-none px-3 py-2 focus-within:z-10 focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
+                  <label for="name" class="block w-full text-xs font-medium text-gray-700">Computer Name</label>
+                  <input type="text" name="name" id="name" class="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm" placeholder="My_Computer_Name">
+              </div>
+          </div>
+          <div id="pcSettings" >
+              <strong>Computer Information</strong>
+              <br />
+              Computer Name:
+              <script>document.write(computerName)</script>
+              <br />
+              Mac Address:
+              <script>document.write(macAddress)</script>
+              <br />
+              <span id="ipAddressdata"></span>
+              <br />
+          </div>
+          <!-- This example requires Tailwind CSS v2.0+ -->
+          <div x-data="{ show : false }"
+               @show.window="show=true"
+          >
+
+          <div class="rounded-md bg-green-50 p-4" x-show="show">
+              <div class="flex">
+                  <div class="flex-shrink-0">
+                      <!-- Heroicon name: solid/check-circle -->
+                      <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                      </svg>
+                  </div>
+                  <div class="ml-3">
+                      <p class="text-sm font-medium text-green-800">
+                          Settings copied to clipboard!
+                      </p>
+                  </div>
+                  <div class="ml-auto pl-3">
+                      <div class="-mx-1.5 -my-1.5">
+                          <button type="button" class="inline-flex bg-green-50 rounded-md p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600"
+                            @click="show=false"
+                          >
+                              <span class="sr-only">Dismiss</span>
+                              <!-- Heroicon name: solid/x -->
+                              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                              </svg>
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <a href="javascript:copyToClipboard()"
+            @click="show=true"
+          >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+          </a>
+          </div>
+
+          <div class="mt-2 ">
+              <button type="button" class="p-2 rounded bg-gray-200 text-gray-600 w-20">Cancel</button>
+              <button type="button" class="p-2 rounded bg-blue-500 text-gray-50 w-20" onclick="saveSettings();">OK</button>
+          </div>
+      </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <script>
+        const electron = require("electron")
+        const {ipcRenderer} = electron
+
+        function saveSettings(){
+            let host = document.getElementById("host").value
+            let name = document.getElementById("name").value
+            if (host===''){
+                alert('Host Name Required!');
+                return false;
+            }
+            console.log(host)
+            ipcRenderer.send("save", host, name);
+        }
+
+
+        function copyToClipboard() {
+            var r = document.createRange();
+            r.selectNode(document.getElementById('pcSettings'));
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(r);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            // alert('copied')
+        }
+
+      </script>
+  </body>
+</html>

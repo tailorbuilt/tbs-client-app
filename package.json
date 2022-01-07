@@ -1,0 +1,41 @@
+{
+  "name": "tbs-client-app",
+  "productName": "tbs-client-app",
+  "version": "1.0.0",
+  "description": "TailorBuilt Solutions Client",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
+  },
+  "keywords": [],
+  "author": {
+    "name": "Theo Reaves",
+    "email": "treaves@tailorbuilt.com"
+  },
+  "license": "MIT",
+  "config": {
+    "forge": "./forge.config.js"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
+    "@tailwindcss/forms": "^0.4.0",
+    "axios": "^0.20.0",
+    "electron": "^10.0.1",
+    "getmac": "^5.20.0",
+    "node-notifier": "^8.0.0",
+    "node-unique-machine-id": "^1.1.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.61",
+    "@electron-forge/maker-deb": "^6.0.0-beta.61",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.61",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
+    "@electron-forge/maker-zip": "^6.0.0-beta.61",
+    "electron": "16.0.6",
+    "tailwindcss": "^3.0.10"
+  }
+}
