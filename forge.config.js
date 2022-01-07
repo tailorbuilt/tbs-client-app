@@ -1,5 +1,7 @@
 module.exports = {
-      "packagerConfig": {},
+      "packagerConfig": {
+	  "icon": "src/resources/tailorbuilt_icon"
+	},
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
