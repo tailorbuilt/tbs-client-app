@@ -131,6 +131,7 @@ ipcMain.on("save", (event,host,name)=>{
 
     const userSettingsString = JSON.stringify(userSettings)
     console.log(userSettingsString)
+    const mac = getmac.default()
     console.log(mac)
 
     fs.writeFileSync(myPath + "/settings.json", userSettingsString)
