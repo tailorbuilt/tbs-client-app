@@ -13,10 +13,13 @@ npm install
 ```
 npm start
 ```
-####If you want to connect in non-ssl mode:
+
+####If you need to re-compile tailwind:
 ```
-npm start http
+npm run tw
 ```
 
-###How to compile
-Comming Soon!
+####To compile to your os platform:
+```
+npm run make
+```
