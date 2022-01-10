@@ -2,6 +2,17 @@ module.exports = {
       "packagerConfig": {
 	  "icon": "src/resources/tailorbuilt_icon"
 	},
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-github",
+          "config": {
+            "repository": {
+              "owner": "tailorbuilt",
+              "name": "tbs-client-app"
+            }
+          }
+        }
+      ],
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
