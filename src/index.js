@@ -18,6 +18,7 @@ const isLocal=process.argv[2]
 const axios = require('axios').default;
 app.on('ready', ()=>{
 
+
     const computerName = os.hostname()
     const net = os.networkInterfaces()
     const mac = getmac.default()
@@ -90,11 +91,22 @@ app.on('ready', ()=>{
           //console.log(message + " " +sourceId+" ("+line+")" + "\n");
         //});
 
+        let firstLogin = true;
         win.on("page-title-updated", (event, title)=> {
             let currentURL = win.webContents.getURL()
             console.log(currentURL)
             if (currentURL.includes("login")){
                 console.log("page is login....")
+                console.log("first login: " + firstLogin);
+                if (firstLogin == false){
+                    firstLogin = true;
+                    console.log('need to go to mac setup....');
+                    console.log("loading page " + http + "://"+clientSettings.host+"/client/"+'name:'+clientSettings.name+"/"+mac)
+                    console.log("first login: " + firstLogin);
+                    win.loadURL(http + "://" + clientSettings.host+"/client/"+'name:'+clientSettings.name+"/"+mac)
+                } else {
+                    firstLogin = false;
+                }
                 const menu = Menu.buildFromTemplate(template)
                 Menu.setApplicationMenu(menu)
 
@@ -120,6 +132,7 @@ app.on('ready', ()=>{
         openSettings()
     }
 })
+
 
 ipcMain.on("save", (event,host,name)=>{
     console.log("Host: " + host)
@@ -235,14 +248,23 @@ const menu = Menu.buildFromTemplate(template)
 Menu.setApplicationMenu(menu)
 
 function openSettings(){
+    const clientSettingsString = fs.readFileSync(myPath + '/settings.json').toString()
+    console.log(clientSettingsString)
+    const clientSettings = JSON.parse(clientSettingsString)
+    console.log(clientSettings)
 
-       winSettings = new BrowserWindow({
-           webPreferences: {
-               nodeIntegration: true,
+    console.log(clientSettings.host)
+
+    winSettings = new BrowserWindow({
+        webPreferences: {
+           nodeIntegration: true,
 	       contextIsolation: false,
-           }
-       })
-       winSettings.loadFile('src/index.html')
+        }
+    })
+
+    winSettings.loadFile('src/index.html', {
+        query: { host: clientSettings.host, name: clientSettings.name }
+    });
 
 }
 

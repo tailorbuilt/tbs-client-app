@@ -124,6 +124,22 @@
         const electron = require("electron")
         const {ipcRenderer} = electron
 
+        // const urlSearchParams = new URLSearchParams(window.location.search);
+        // const params = Object.fromEntries(urlSearchParams.entries());
+        // console.log(urlSearchParams);
+        // console.log(params);
+
+
+        console.log(location.href)   // YOUR_PATH/app/main.html?queryKey=queryValue#hashValue
+        console.log(location.search) // ?queryKey=queryValue
+
+        // You'll probably want to use URLSearchParams
+        const params = new URLSearchParams(location.search)
+        console.log(params.get("host"))
+        console.log(params.get("name"))
+        document.getElementById("host").value = params.get("host")
+        document.getElementById("name").value = params.get("name")
+
         function saveSettings(){
             let host = document.getElementById("host").value
             let name = document.getElementById("name").value
