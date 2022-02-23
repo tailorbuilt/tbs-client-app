@@ -248,23 +248,30 @@ const menu = Menu.buildFromTemplate(template)
 Menu.setApplicationMenu(menu)
 
 function openSettings(){
-    const clientSettingsString = fs.readFileSync(myPath + '/settings.json').toString()
-    console.log(clientSettingsString)
-    const clientSettings = JSON.parse(clientSettingsString)
-    console.log(clientSettings)
-
-    console.log(clientSettings.host)
-
     winSettings = new BrowserWindow({
         webPreferences: {
-           nodeIntegration: true,
-	       contextIsolation: false,
+            nodeIntegration: true,
+            contextIsolation: false,
         }
     })
+    try{
+        const clientSettingsString = fs.readFileSync(myPath + '/settings.json').toString()
+        console.log(clientSettingsString)
+        const clientSettings = JSON.parse(clientSettingsString)
+        console.log(clientSettings)
 
-    winSettings.loadFile('src/index.html', {
-        query: { host: clientSettings.host, name: clientSettings.name }
-    });
+        console.log(clientSettings.host)
+
+
+
+        winSettings.loadFile('src/index.html', {
+            query: { host: clientSettings.host, name: clientSettings.name }
+        });
+    } catch(e) {
+        winSettings.loadFile('src/index.html');
+    }
+
+
 
 }
 
