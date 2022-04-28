@@ -24,7 +24,7 @@ if (isDev) {
 	console.log('Running in production');
 	const { app, autoUpdater, dialog } = require('electron')
 
-	const server = 'https://update.tailorbuilt.softare"
+	const server = 'https://update.tailorbuilt.softare'
 	const url = `${server}/update/${process.platform}/${app.getVersion()}`
 
 	autoUpdater.setFeedURL({ url })
