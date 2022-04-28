@@ -1,7 +1,7 @@
 {
   "name": "tbs-client-app",
   "productName": "tbs-client-app",
-  "version": "0.2.5",
+  "version": "0.5.0",
   "description": "TailorBuilt Solutions Client",
   "main": "src/index.js",
   "scripts": {
