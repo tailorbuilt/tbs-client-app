@@ -12,15 +12,44 @@ var session
 var site_info
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
-const { app, autoUpdater } = require('electron')
-
-const server = 'tbhub-client-autoupdater-2qahp979c-tailorbuilt.vercel.app'
-const url = `${server}/update/${process.platform}/${app.getVersion()}`
-
-autoUpdater.setFeedURL({ url })
-
 console.log(process.argv[2])
 const isLocal=process.argv[2]
+
+
+const isDev = require('electron-is-dev');
+
+if (isDev) {
+	console.log('Running in development');
+} else {
+	console.log('Running in production');
+	const { app, autoUpdater, dialog } = require('electron')
+
+	const server = 'https://update.tailorbuilt.softare"
+	const url = `${server}/update/${process.platform}/${app.getVersion()}`
+
+	autoUpdater.setFeedURL({ url })
+
+	setInterval(() => {
+  		autoUpdater.checkForUpdates()
+	}, 60000)
+
+	autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  		const dialogOpts = {
+    		type: 'info',
+    		buttons: ['Restart', 'Later'],
+    		title: 'Application Update',
+    		message: process.platform === 'win32' ? releaseNotes : releaseName,
+    		detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+  	}
+
+  	dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    		if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  		})
+	})
+
+}
+
+
 
 const axios = require('axios').default;
 app.on('ready', ()=>{
