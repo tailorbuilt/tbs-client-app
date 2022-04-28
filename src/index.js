@@ -12,6 +12,13 @@ var session
 var site_info
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
+const { app, autoUpdater } = require('electron')
+
+const server = 'tbs-client-1cvy88p9o-tailorbuilt.vercel.app'
+const url = `${server}/update/${process.platform}/${app.getVersion()}`
+
+autoUpdater.setFeedURL({ url })
+
 console.log(process.argv[2])
 const isLocal=process.argv[2]
 
