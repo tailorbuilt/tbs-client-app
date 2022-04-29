@@ -18,6 +18,7 @@ const isLocal=process.argv[2]
 
 const isDev = require('electron-is-dev');
 
+/*
 if (isDev) {
 	console.log('Running in development');
 } else {
@@ -48,6 +49,7 @@ if (isDev) {
 	})
 
 }
+*/
 
 
 
