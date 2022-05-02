@@ -18,6 +18,40 @@ const isLocal=process.argv[2]
 
 const isDev = require('electron-is-dev');
 
+/*
+if (isDev) {
+	console.log('Running in development');
+} else {
+	console.log('Running in production');
+	const { app, autoUpdater, dialog } = require('electron')
+
+	const server = 'https://update.tailorbuilt.softare'
+	const url = `${server}/update/${process.platform}/${app.getVersion()}`
+
+	autoUpdater.setFeedURL({ url })
+
+	setInterval(() => {
+  		autoUpdater.checkForUpdates()
+	}, 60000)
+
+	autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  		const dialogOpts = {
+    		type: 'info',
+    		buttons: ['Restart', 'Later'],
+    		title: 'Application Update',
+    		message: process.platform === 'win32' ? releaseNotes : releaseName,
+    		detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+  	}
+
+  	dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    		if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  		})
+	})
+
+}
+*/
+
+
 
 const axios = require('axios').default;
 app.on('ready', ()=>{
@@ -43,6 +77,7 @@ app.on('ready', ()=>{
         localIpAddress = add;
     })
 
+
     try{
         const clientSettingsString = fs.readFileSync(myPath + '/settings.json').toString()
         console.log(clientSettingsString)
@@ -60,39 +95,8 @@ app.on('ready', ()=>{
 
 
 //	open('microsoft-edge:https://github.com');
-
-const { platform } = require('os');
-const { exec } = require('child_process');
-
-const WINDOWS_PLATFORM = 'win32';
-const MAC_PLATFORM = 'darwin';
-
-const osPlatform = platform();
-const args = process.argv.slice(2);
-//const [url] = args;
-const url = http + "://" + clientSettings.host+"/client/"+'name:'+clientSettings.name+"/"+mac
-
-if (url === undefined) {
-  console.error('Please enter a URL, e.g. "http://www.opencanvas.co.uk"');
-  process.exit(0);
-}
-
-let command;
-
-if (osPlatform === WINDOWS_PLATFORM) {
-  command = `start microsoft-edge:${url}`;
-} else if (osPlatform === MAC_PLATFORM) {
-  command = `open -a "Google Chrome" ${url}`;
-} else {
-  command = `google-chrome --no-sandbox ${url}`;
-}
-
-console.log(`executing command: ${command}`);
-
-exec(command);
-app.quit();
-
-
+	shell.openExternal('microsoft-edge:https://github.com')
+	exit;
 
         console.log("loading page " + http + "://"+clientSettings.host+"/client/"+'name:'+clientSettings.name+"/"+mac)
         win.loadURL(http + "://" + clientSettings.host+"/client/"+'name:'+clientSettings.name+"/"+mac)
@@ -173,6 +177,119 @@ app.quit();
     }
 })
 
+
+ipcMain.on("save", (event,host,name)=>{
+    console.log("Host: " + host)
+    console.log("Name: " + name)
+    const userSettings = {
+        "host": host,
+        "name": name,
+    }
+
+    const userSettingsString = JSON.stringify(userSettings)
+    console.log(userSettingsString)
+    const mac = getmac.default()
+    console.log(mac)
+
+    fs.writeFileSync(myPath + "/settings.json", userSettingsString)
+    if(win){
+        win.loadURL("http://" + host+"/client/"+'name:'+name+"/"+mac)
+    } else {
+        win = new BrowserWindow({
+          webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: true
+	  }
+	})
+        win.loadURL("http://" + host)
+    }
+    winSettings.destroy();
+
+
+})
+ipcMain.on("close_info", (event)=>{
+    console.log("close info")
+    winInfo.destroy();
+})
+
+ipcMain.on("toast", (event,message)=>{
+    console.log("toast message")
+    toast(message)
+})
+
+ipcMain.on('session_settings', (event, session_settings)=>{
+  session = session_settings
+  console.log("session info: " + session);
+})
+
+let isMac = process.platform === 'darwin'
+
+let template = [
+  // { role: 'appMenu' }
+  ...(isMac ? [{
+    label: app.name,
+    submenu: [
+      { role: 'about' },
+      { type: 'separator' },
+      { role: 'services' },
+      { type: 'separator' },
+      { role: 'hide' },
+      { role: 'hideothers' },
+      { role: 'unhide' },
+      { type: 'separator' },
+      { role: 'quit' }
+    ]
+  }] : [])
+]
+
+let connection_menu = {
+      label: "Connection",
+      enabled: true,
+      visible: true,
+      submenu: [
+        {
+            label: "Change Settings",
+            click(){openSettings()}
+        }
+      ]
+  }
+
+
+let editmenu = { role: 'editMenu' }
+let viewmenu = {
+    label: 'View',
+    submenu: [
+      { role: 'toggledevtools' },
+      { type: 'separator' },
+      { role: 'resetzoom' },
+      { role: 'zoomin' },
+      { role: 'zoomout' },
+      { type: 'separator' },
+      { role: 'togglefullscreen' }
+    ]
+  }
+let helpmenu = {
+    role: 'help',
+    submenu: [
+      {
+        label: 'Training',
+        click: async () => {
+          const { shell } = require('electron')
+          await shell.openExternal('https://www.tailorbuilt.com')
+        }
+      }
+    ]
+  }
+
+template.push(connection_menu)
+template.push(editmenu)
+template.push(viewmenu)
+template.push(helpmenu)
+
+console.log(template)
+
+const menu = Menu.buildFromTemplate(template)
+Menu.setApplicationMenu(menu)
 
 function openSettings(){
     winSettings = new BrowserWindow({
