@@ -250,7 +250,15 @@ let connection_menu = {
         {
             label: "Change Settings",
             click(){openSettings()}
-        }
+        },
+	{
+	    label: 'Reload Window',
+  	    accelerator: "CmdOrCtrl+Shift+R", 
+  	    click: () => {
+     		win.webContents.reloadIgnoringCache()
+	    }
+	}
+
       ]
   }
 
